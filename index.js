@@ -15,6 +15,8 @@ module.exports = function(app, options) {
     publicDir  : path.join(process.cwd(), 'public')
   };
 
+  options || (options = {});
+
   if (typeof app === 'object') {
     options = app;
     app     = null;
