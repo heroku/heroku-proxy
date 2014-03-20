@@ -1,0 +1,35 @@
+{
+  "name": "heroku-proxy",
+  "version": "0.0.0",
+  "description": "a heroku proxy",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/heroku/heroku-proxy.git"
+  },
+  "keywords": [
+    "heroku",
+    "proxy"
+  ],
+  "author": "Jonathan Clem",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/heroku/heroku-proxy/issues"
+  },
+  "homepage": "https://github.com/heroku/heroku-proxy",
+  "bin": "./bin/bootstrap",
+  "dependencies": {
+    "oauth": "~0.9.11",
+    "clusterflock": "~0.3.0",
+    "express": "~3.4.8",
+    "harp": "~0.11.2"
+  },
+  "devDependencies": {
+    "nodemon": "~1.0.16",
+    "netrc": "~0.1.3",
+    "heroku-client": "~1.2.0"
+  }
+}
