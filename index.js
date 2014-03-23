@@ -2,7 +2,6 @@
 
 var clusterflock  = require('clusterflock');
 var express       = require('express');
-var harp          = require('harp');
 var path          = require('path');
 var bouncer       = require('./lib/bouncer');
 var cookieSession = require('./lib/cookie-session');
@@ -10,7 +9,6 @@ var api           = require('./lib/api');
 
 module.exports = function(app, options) {
   var defaultOptions = {
-    harp       : true,
     startServer: true,
     publicDir  : path.join(process.cwd(), 'public')
   };
@@ -38,10 +36,6 @@ module.exports = function(app, options) {
   app.use(express.favicon());
   app.use(express.csrf());
   app.use(express.static(options.publicDir));
-
-  if (options.harp) {
-    app.use(harp.mount(options.publicDir));
-  }
 
   app.get('/api/*', api.api);
   app.post('/api/*', api.api);

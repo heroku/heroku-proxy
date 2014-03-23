@@ -29,21 +29,17 @@ proxy();
 ```
 
 Now, running `foreman run nodemon index.js` will serve content inside the `public`
-directory and process it with harp.js. Any calls to `/api/*` will be proxied
-through the Heroku API.
+directory. Any calls to `/api/*` will be proxied through the Heroku API.
 
 ## Options
 
-By default, heroku-proxy will use harp middleware and start the server for you.
-You can prevent that with the `harp` and `startServer` options:
+By default, heroku-proxy will start a server for you.
+You can prevent that with the `startServer` option:
 
 ```javascript
 var proxy = require('heroku-proxy');
 
-proxy({
-  harp: false,
-  startServer: false
-});
+proxy({ startServer: false });
 ```
 
 If you'd like to pass in your own express app, you can do that, as well:
@@ -53,7 +49,5 @@ var express = require('express');
 var proxy   = require('heroku-proxy');
 var app     = express();
 
-proxy(app, {
-  harp: false
-});
+proxy(app);
 ```
