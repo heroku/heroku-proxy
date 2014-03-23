@@ -1,11 +1,10 @@
 'use strict';
 
-var clusterflock  = require('clusterflock');
-var express       = require('express');
-var path          = require('path');
-var bouncer       = require('./lib/bouncer');
-var cookieSession = require('./lib/cookie-session');
-var proxy         = require('./lib/proxy');
+var bouncer      = require('heroku-bouncer');
+var clusterflock = require('clusterflock');
+var express      = require('express');
+var path         = require('path');
+var proxy        = require('./lib/proxy');
 
 module.exports = function(app, options) {
   options || (options = {});
@@ -18,9 +17,8 @@ module.exports = function(app, options) {
 
   if (!app) app = express();
 
-  app.use(express.cookieParser(process.env.COOKIE_SECRET));
-  app.use(cookieSession);
   bouncer(app);
+
   app.use(express.favicon());
   app.use(express.csrf());
   app.use(express.static(path.join(process.cwd(), 'public')));
