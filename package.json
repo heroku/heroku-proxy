@@ -20,7 +20,6 @@
     "url": "https://github.com/heroku/heroku-proxy/issues"
   },
   "homepage": "https://github.com/heroku/heroku-proxy",
-  "bin": "./bin/bootstrap",
   "dependencies": {
     "express": "~3.4.8"
   },
