@@ -4,7 +4,7 @@
   "description": "a heroku proxy",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -22,11 +22,11 @@
   "homepage": "https://github.com/heroku/heroku-proxy",
   "bin": "./bin/bootstrap",
   "dependencies": {
-    "clusterflock": "~0.3.0",
-    "express": "~3.4.8",
-    "heroku-client": "~1.2.0",
-    "netrc": "~0.1.3",
-    "nodemon": "~1.0.16",
-    "heroku-bouncer": "~0.1.0"
+    "express": "~3.4.8"
+  },
+  "devDependencies": {
+    "should": "~3.2.0-beta1",
+    "mocha": "~1.18.2",
+    "request": "~2.34.0"
   }
 }

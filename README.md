@@ -1,53 +1,51 @@
 # heroku-proxy
 
-heroku-proxy provides an easy way to prototype web apps using the Heroku API and
-Heroku OAuth.
+heroku-proxy provides a proxy to the Heroku API for express apps. It is
+intended for use with [node-heroku-bouncer][node-heroku-bouncer].
 
-## Setup
-
-### Create a new project and install it:
+## Install
 
 ```sh
-$ git init my-new-app
-$ cd my-new-app
-$ mkdir public
-$ npm init
 $ npm install heroku-proxy --save
 ```
 
-### Run the bootstrap:
+## Use
+
+heroku-proxy assumes that it has the node-heroku-bouncer middleware in front of
+it. See the [node-heroku-bouncer README][node-heroku-bouncer-readme] for
+configuration instructions.
+
+```javascript
+var express     = require('express');
+var herokuProxy = require('heroku-proxy');
+var app         = express();
+
+// ...set up heroku-bouncer
+
+app.use(herokuProxy());
+```
+
+By default, heroku-proxy will proxy all requests to `/api/*` of any method to
+`api.heroku.com` via `https`. You can override the default options by passing
+an object into the function returned by the `heroku-proxy` module:
+
+```javascript
+app.use(herokuProxy({
+  hostname: 'localhost',
+  port    : 5001,
+  prefix  : 'heroku-api',
+  protocol: 'http'
+}));
+```
+
+Now, a request to `/heroku-api/apps` will be proxied to
+`http://localhost:5001/apps`.
+
+## Test
 
 ```sh
-$ ./node_modules/.bin/heroku-proxy
+$ npm test
 ```
 
-### Require it in your `index.js`:
-
-```javascript
-var proxy = require('heroku-proxy');
-proxy();
-```
-
-Now, running `foreman run nodemon index.js` will serve content inside the `public`
-directory. Any calls to `/api/*` will be proxied through the Heroku API.
-
-## Options
-
-By default, heroku-proxy will start a server for you.
-You can prevent that with the `startServer` option:
-
-```javascript
-var proxy = require('heroku-proxy');
-
-proxy({ startServer: false });
-```
-
-If you'd like to pass in your own express app, you can do that, as well:
-
-```javascript
-var express = require('express');
-var proxy   = require('heroku-proxy');
-var app     = express();
-
-proxy(app);
-```
+[node-heroku-bouncer]:        https://github.com/jclem/node-heroku-bouncer
+[node-heroku-bouncer-readme]: https://github.com/jclem/node-heroku-bouncer/blob/master/README.md

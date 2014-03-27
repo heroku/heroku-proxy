@@ -1,30 +1,62 @@
 'use strict';
 
-var bouncer      = require('heroku-bouncer');
-var clusterflock = require('clusterflock');
-var express      = require('express');
-var path         = require('path');
-var proxy        = require('./lib/proxy');
+var express = require('express');
+var router  = new express.Router();
 
-module.exports = function(app, options) {
+module.exports = function(options) {
   options || (options = {});
-  options.startServer || (options.startServer = true);
+  setOptions(options);
 
-  if (typeof app === 'object') {
-    options = app;
-    app     = null;
-  }
+  router.all('/' + options.prefix + '/*', function(req, res) {
+    var token;
 
-  if (!app) app = express();
+    if (req['heroku-bouncer'] && req['heroku-bouncer'].token) {
+      token = req['heroku-bouncer'].token;
+    } else {
+      token = '';
+    }
 
-  bouncer(app);
+    delete req.headers.host;
 
-  app.use(express.favicon());
-  app.use(express.csrf());
-  app.use(express.static(path.join(process.cwd(), 'public')));
-  app.all('/api/*', proxy);
+    var proxyReq = require(options.protocol).request({
+      auth    : ':' + token,
+      headers : req.headers,
+      hostname: options.hostname,
+      method  : req.method,
+      path    : req.originalUrl.slice(4),
+      port    : options.port
+    });
 
-  if (options.startServer) {
-    clusterflock(app);
-  }
+    req.pipe(proxyReq);
+
+    proxyReq.on('response', function(proxyRes) {
+      res.statusCode = proxyRes.statusCode;
+
+      for (var header in proxyRes.headers) {
+        res.setHeader(header, proxyRes.headers[header]);
+      }
+
+      proxyRes.pipe(res);
+    });
+  });
+
+  return router.middleware;
 };
+
+function setOptions(options) {
+  if (!options.hasOwnProperty('hostname')) {
+    options.hostname = 'api.heroku.com';
+  }
+
+  if (!options.hasOwnProperty('port')) {
+    options.port = 443;
+  }
+
+  if (!options.hasOwnProperty('prefix')) {
+    options.prefix = 'api';
+  }
+
+  if (!options.hasOwnProperty('protocol')) {
+    options.protocol = 'https';
+  }
+}
