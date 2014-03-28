@@ -8,6 +8,7 @@ module.exports = function(options) {
   setOptions(options);
 
   router.all('/' + options.prefix + '/*', function(req, res) {
+    var headers = getHeaders(req);
     var token;
 
     if (req['heroku-bouncer'] && req['heroku-bouncer'].token) {
@@ -16,11 +17,9 @@ module.exports = function(options) {
       token = '';
     }
 
-    delete req.headers.host;
-
     var proxyReq = require(options.protocol).request({
       auth    : ':' + token,
-      headers : req.headers,
+      headers : headers,
       hostname: options.hostname,
       method  : req.method,
       path    : req.originalUrl.slice(4),
@@ -42,6 +41,18 @@ module.exports = function(options) {
 
   return router.middleware;
 };
+
+function getHeaders(req) {
+  var headersWhitelist = ['accept', 'content-type', 'if-none-match', 'range'];
+
+  return headersWhitelist.reduce(function(headers, header) {
+    if (headersWhitelist.indexOf(header) >= -1 && req.headers.hasOwnProperty(header)) {
+      headers[header] = req.headers[header];
+    }
+
+    return headers;
+  }, {});
+}
 
 function setOptions(options) {
   if (!options.hasOwnProperty('hostname')) {

@@ -17,13 +17,14 @@ describe('proxy', function() {
   // NOTE: server.js copies headers from its incoming request back to the
   // original response, which is why we're testing response headers.
 
-  it('proxies headers to and from the API', function(done) {
+  it('proxies whitelisted headers to and from the API', function(done) {
     request({
       url: 'http://localhost:' + clientPort + '/api/apps',
-      headers: { foo: 'bar' }
+      headers: { foo: 'bar', accept: 'accept' }
     }, function(err, res) {
       if (err) throw err;
-      res.headers['foo'].should.eql('bar');
+      res.headers.hasOwnProperty('foo').should.eql(false);
+      res.headers.accept.should.eql('accept');
       done();
     });
   });
