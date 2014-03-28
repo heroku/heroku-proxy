@@ -30,6 +30,7 @@ module.exports = function(options) {
 
     proxyReq.on('response', function(proxyRes) {
       res.statusCode = proxyRes.statusCode;
+      res.setHeader('cache-control', 'no-cache');
 
       for (var header in proxyRes.headers) {
         res.setHeader(header, proxyRes.headers[header]);

@@ -29,6 +29,17 @@ describe('proxy', function() {
     });
   });
 
+  it('sets cache-control to no-cache', function(done) {
+    request({
+      url: 'http://localhost:' + clientPort + '/api/apps',
+      headers: { foo: 'bar', accept: 'accept' }
+    }, function(err, res) {
+      if (err) throw err;
+      res.headers['cache-control'].should.eql('no-cache');
+      done();
+    });
+  });
+
   it('proxies status codes', function(done) {
     request({
       url: 'http://localhost:' + clientPort + '/api/apps?statusCode=202'
