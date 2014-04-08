@@ -44,7 +44,7 @@ module.exports = function(options) {
 };
 
 function getHeaders(req) {
-  var headersWhitelist = ['accept', 'content-type', 'if-none-match', 'range'];
+  var headersWhitelist = ['accept', 'content-length', 'content-type', 'if-none-match', 'range'];
 
   return headersWhitelist.reduce(function(headers, header) {
     if (headersWhitelist.indexOf(header) >= -1 && req.headers.hasOwnProperty(header)) {
