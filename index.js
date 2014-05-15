@@ -43,12 +43,14 @@ module.exports = function(options) {
       }
 
       proxyRes.pipe(res).on('finish', function() {
-        timer.log({
-          hostname  : options.hostname,
-          path      : req.originalUrl.slice(4),
-          method    : req.method,
-          request_id: req.get('x-request-id')
-        });
+        if (options.log) {
+          timer.log({
+            hostname  : options.hostname,
+            path      : req.originalUrl.slice(4),
+            method    : req.method,
+            request_id: req.get('x-request-id')
+          });
+        }
       });
     });
   });
