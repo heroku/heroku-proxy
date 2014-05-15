@@ -50,7 +50,8 @@ function getHeaders(req) {
     'content-type',
     'if-none-match',
     'range',
-    'x-heroku-legacy-ids'
+    'x-heroku-legacy-ids',
+    'x-request-id'
   ];
 
   return headersWhitelist.reduce(function(headers, header) {
