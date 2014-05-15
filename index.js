@@ -1,6 +1,7 @@
 'use strict';
 
 var express = require('express');
+var logfmt  = require('logfmt');
 var router  = new express.Router();
 
 module.exports = function(options) {
@@ -26,6 +27,11 @@ module.exports = function(options) {
       port    : options.port
     });
 
+    var timer = logfmt.time().namespace({
+      ns  : 'heroku-proxy',
+      time: new Date().toISOString()
+    });
+
     req.pipe(proxyReq);
 
     proxyReq.on('response', function(proxyRes) {
@@ -36,7 +42,14 @@ module.exports = function(options) {
         res.setHeader(header, proxyRes.headers[header]);
       }
 
-      proxyRes.pipe(res);
+      proxyRes.pipe(res).on('finish', function() {
+        timer.log({
+          hostname  : options.hostname,
+          path      : req.originalUrl.slice(4),
+          method    : req.method,
+          request_id: req.get('x-request-id')
+        });
+      });
     });
   });
 
