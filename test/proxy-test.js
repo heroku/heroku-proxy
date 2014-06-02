@@ -60,6 +60,17 @@ describe('proxy', function() {
     });
   });
 
+  it('proxies the X-Range header into the range header', function(done) {
+    request({
+      url: 'http://localhost:' + clientPort + '/api/apps',
+      headers: { 'X-Range': 'foofyfoofoo' }
+    }, function(err, res) {
+      if (err) throw err;
+      res.headers['range'].should.eql('foofyfoofoo');
+      done();
+    });
+  });
+
   it('proxies the heroku-bouncer token in an Authorization header', function(done) {
     request({
       url: 'http://localhost:' + clientPort + '/api/apps?token=my-token'

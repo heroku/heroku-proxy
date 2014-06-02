@@ -18,6 +18,10 @@ module.exports = function(options) {
       token = '';
     }
 
+    if (headers['x-range']) {
+      headers['range'] = headers['x-range'];
+    }
+
     var proxyReq = require(options.protocol).request({
       auth    : ':' + token,
       headers : headers,
@@ -65,6 +69,7 @@ function getHeaders(req) {
     'content-type',
     'if-none-match',
     'range',
+    'x-range',
     'x-heroku-legacy-ids',
     'x-request-id'
   ];
