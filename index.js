@@ -59,9 +59,6 @@ module.exports = function(options) {
 };
 
 function getHeaders(req, options) {
-  var additionalHeaders = options.whitelistHeaders || [];
-  var headerTransforms  = options.headerTransforms || {};
-
   var headersWhitelist = [
     'accept',
     'content-length',
@@ -70,11 +67,11 @@ function getHeaders(req, options) {
     'range',
     'x-heroku-legacy-ids',
     'x-request-id'
-  ].concat(additionalHeaders);
+  ].concat(options.whitelistHeaders);
 
   return Object.keys(req.headers).reduce(function(headers, header) {
     var value = req.headers[header];
-    header = headerTransforms[header] || header;
+    header = options.headerTransforms[header] || header;
 
     if (headersWhitelist.indexOf(header) > -1) {
       headers[header] = value;
@@ -95,6 +92,14 @@ function getHeaders(req, options) {
 function setOptions(options) {
   if (!options.hasOwnProperty('hostname')) {
     options.hostname = 'api.heroku.com';
+  }
+
+  if (!options.hasOwnProperty('whitelistHeaders')) {
+    options.whitelistHeaders = [];
+  }
+
+  if (!options.hasOwnProperty('headerTransforms')) {
+    options.headerTransforms = {};
   }
 
   if (!options.hasOwnProperty('port')) {
