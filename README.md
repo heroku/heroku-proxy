@@ -41,6 +41,16 @@ app.use(herokuProxy({
 Now, a request to `/heroku-api/apps` will be proxied to
 `http://localhost:5001/apps`.
 
+## Options
+
+| Option   | Effect | Default |
+| -------- | ------ | ------- |
+| hostname | The hostname to proxy requests to | `api.heroku.com` |
+| port     | The port on API host | `443` |
+| prefix   | A prefix path where your Express app will be listening for API requests | `api` |
+| protocol | The protocol to use | `https` |
+| whitelistHeaders | Additional headers to whitelist to pass through to the API | `[]` |
+| headerTransforms | An object of keys (from) and values (to) to transform request headers before being sent to the API | `{}` |
 ## Test
 
 ```sh
