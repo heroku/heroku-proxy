@@ -60,13 +60,25 @@ describe('proxy', function() {
     });
   });
 
-  it('proxies the X-Range header into the range header', function(done) {
+  it('allows additional headers to be configured', function(done) {
     request({
       url: 'http://localhost:' + clientPort + '/api/apps',
-      headers: { 'X-Range': 'foofyfoofoo' }
+      headers: { 'Bar': 'bar' }
+    }, function(err, res) {
+      if (err) throw err;
+      res.headers['bar'].should.eql('bar');
+      done();
+    });
+  });
+
+  it('transforms configured transformed headers', function(done) {
+    request({
+      url: 'http://localhost:' + clientPort + '/api/apps',
+      headers: { 'X-Range': 'foofyfoofoo', 'X-Bar': 'barbybarbar' }
     }, function(err, res) {
       if (err) throw err;
       res.headers['range'].should.eql('foofyfoofoo');
+      res.headers['bar'].should.eql('barbybarbar');
       done();
     });
   });

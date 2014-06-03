@@ -19,7 +19,12 @@ module.exports = function(serverPort) {
   app.use(proxy({
     hostname: 'localhost',
     port: serverPort,
-    protocol: 'http'
+    protocol: 'http',
+    whitelistHeaders: ['bar'],
+    headerTransforms: {
+      'x-range': 'range',
+      'x-bar'  : 'bar'
+    }
   }));
 
   return server;
