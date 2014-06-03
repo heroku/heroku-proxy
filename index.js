@@ -9,7 +9,7 @@ module.exports = function(options) {
   setOptions(options);
 
   router.all('/' + options.prefix + '/*', function(req, res) {
-    var headers = getHeaders(req);
+    var headers = getHeaders(req, options);
     var token;
 
     if (req['heroku-bouncer'] && req['heroku-bouncer'].token) {
@@ -58,7 +58,10 @@ module.exports = function(options) {
   return router.middleware;
 };
 
-function getHeaders(req) {
+function getHeaders(req, options) {
+  var additionalHeaders = options.whitelistHeaders || [];
+  var headerTransforms  = options.headerTransforms || {};
+
   var headersWhitelist = [
     'accept',
     'content-length',
@@ -67,7 +70,18 @@ function getHeaders(req) {
     'range',
     'x-heroku-legacy-ids',
     'x-request-id'
-  ];
+  ].concat(additionalHeaders);
+
+  return Object.keys(req.headers).reduce(function(headers, header) {
+    var value = req.headers[header];
+    header = headerTransforms[header] || header;
+
+    if (headersWhitelist.indexOf(header) > -1) {
+      headers[header] = value;
+    }
+
+    return headers;
+  }, {});
 
   return headersWhitelist.reduce(function(headers, header) {
     if (headersWhitelist.indexOf(header) >= -1 && req.headers.hasOwnProperty(header)) {

@@ -60,6 +60,29 @@ describe('proxy', function() {
     });
   });
 
+  it('allows additional headers to be configured', function(done) {
+    request({
+      url: 'http://localhost:' + clientPort + '/api/apps',
+      headers: { 'Bar': 'bar' }
+    }, function(err, res) {
+      if (err) throw err;
+      res.headers['bar'].should.eql('bar');
+      done();
+    });
+  });
+
+  it('transforms configured transformed headers', function(done) {
+    request({
+      url: 'http://localhost:' + clientPort + '/api/apps',
+      headers: { 'X-Range': 'foofyfoofoo', 'X-Bar': 'barbybarbar' }
+    }, function(err, res) {
+      if (err) throw err;
+      res.headers['range'].should.eql('foofyfoofoo');
+      res.headers['bar'].should.eql('barbybarbar');
+      done();
+    });
+  });
+
   it('proxies the heroku-bouncer token in an Authorization header', function(done) {
     request({
       url: 'http://localhost:' + clientPort + '/api/apps?token=my-token'
