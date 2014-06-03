@@ -45,6 +45,7 @@ Now, a request to `/heroku-api/apps` will be proxied to
 
 | Option   | Effect | Default |
 | -------- | ------ | ------- |
+| log      | Log request details | `false` |
 | hostname | The hostname to proxy requests to | `api.heroku.com` |
 | port     | The port on API host | `443` |
 | prefix   | A prefix path where your Express app will be listening for API requests | `api` |
