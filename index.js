@@ -1,10 +1,40 @@
 'use strict';
 
+/**
+ * HerokuProxy proxies requests to the Heroku API. It is meant to be used in
+ * conjunction with
+ * [heroku-bouncer](https://github.com/jclem/node-heroku-bouncer), which will
+ * add the necessary authentication information to the incoming request.
+ *
+ * @class HerokuProxy
+ */
+
 var express = require('express');
 var logfmt  = require('logfmt');
 var router  = new express.Router();
 
-module.exports = function(options) {
+/**
+ * @method createProxy
+ * @param {Object} options options for configuring the proxy middleware
+ * @param {String} [options.prefix] a prefix to look for API requests under,
+ *   such as `'api'` when an apps request might go to `'/api/apps'`
+ * @param {String} [options.hostname='api.heroku.com'] the hostname for the
+ *   Heroku API
+ * @param {Array} [options.whitelistHeader=[]] an array of headers, in addition
+ *   to the default whitelisted ones, to pass through to the API for each
+ *   request
+ * @param {Object} [options.headerTransforms={}] an object of request headers as
+ *   keys and as values the headers they should be transformed into before being
+ *   proxied (e.g. `{ 'x-range': 'range' }`
+ * @param {Number} [options.port=443] the port on the API to send requests to
+ * @param {String} [options.protocol='https'] the protocol to use for the
+ *   proxied requests
+ * @param {Boolean} [options.log] if `true`, request details such as elapsed
+ *   time and path requested will be logged
+ * @return {Function} a piece of middleware which will look for API requests
+ *   and proxy them
+ */
+module.exports = function createProxy(options) {
   options = options || {};
   setOptions(options);
 
