@@ -1,7 +1,7 @@
 'use strict';
 
 var request = require('request');
-var should  = require('should');
+require('should');
 
 describe('proxy', function() {
   var server = require('./fixtures/server');
@@ -66,7 +66,7 @@ describe('proxy', function() {
       headers: { 'Bar': 'bar' }
     }, function(err, res) {
       if (err) throw err;
-      res.headers['bar'].should.eql('bar');
+      res.headers.bar.should.eql('bar');
       done();
     });
   });
@@ -77,8 +77,8 @@ describe('proxy', function() {
       headers: { 'X-Range': 'foofyfoofoo', 'X-Bar': 'barbybarbar' }
     }, function(err, res) {
       if (err) throw err;
-      res.headers['range'].should.eql('foofyfoofoo');
-      res.headers['bar'].should.eql('barbybarbar');
+      res.headers.range.should.eql('foofyfoofoo');
+      res.headers.bar.should.eql('barbybarbar');
       done();
     });
   });
@@ -89,7 +89,7 @@ describe('proxy', function() {
     }, function(err, res) {
       if (err) throw err;
       var expectedHeader = 'Basic ' + (new Buffer(':my-token').toString('base64'));
-      res.headers['authorization'].should.eql(expectedHeader);
+      res.headers.authorization.should.eql(expectedHeader);
       done();
     });
   });

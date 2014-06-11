@@ -28,5 +28,27 @@
     "should": "~3.2.0-beta1",
     "mocha": "~1.18.2",
     "request": "~2.34.0"
+  },
+  "jshintConfig": {
+    "eqeqeq"      : true,
+    "forin"       : true,
+    "globalstrict": true,
+    "immed"       : true,
+    "indent"      : 2,
+    "latedef"     : "nofunc",
+    "newcap"      : true,
+    "noarg"       : true,
+    "quotmark"    : "single",
+    "strict"      : true,
+    "trailing"    : true,
+    "undef"       : true,
+    "unused"      : true,
+    "globals"     : {
+      "Buffer"  : false,
+      "describe": false,
+      "it"      : false,
+      "module"  : false,
+      "require" : false
+    }
   }
 }

@@ -5,7 +5,7 @@ var logfmt  = require('logfmt');
 var router  = new express.Router();
 
 module.exports = function(options) {
-  options || (options = {});
+  options = options || {};
   setOptions(options);
 
   router.all('/' + options.prefix + '/*', function(req, res) {
@@ -39,7 +39,9 @@ module.exports = function(options) {
       res.setHeader('cache-control', 'no-cache');
 
       for (var header in proxyRes.headers) {
-        res.setHeader(header, proxyRes.headers[header]);
+        if (proxyRes.headers.hasOwnProperty(header)) {
+          res.setHeader(header, proxyRes.headers[header]);
+        }
       }
 
       proxyRes.pipe(res).on('finish', function() {
@@ -75,14 +77,6 @@ function getHeaders(req, options) {
 
     if (headersWhitelist.indexOf(header) > -1) {
       headers[header] = value;
-    }
-
-    return headers;
-  }, {});
-
-  return headersWhitelist.reduce(function(headers, header) {
-    if (headersWhitelist.indexOf(header) >= -1 && req.headers.hasOwnProperty(header)) {
-      headers[header] = req.headers[header];
     }
 
     return headers;
