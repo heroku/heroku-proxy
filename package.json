@@ -1,6 +1,6 @@
 {
   "name": "heroku-proxy",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "a heroku proxy",
   "main": "index.js",
   "scripts": {
