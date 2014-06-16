@@ -28,6 +28,21 @@ describe('proxy', function() {
     });
   });
 
+  it('does not override its own host when using x-proxy-host :(', function(done) {
+    request({
+      url: 'http://localhost:' + clientPort + '/api/apps',
+      headers: { 'x-proxy-host': '127.0.0.1' }
+    }, function(err, res) {
+      if (err) throw err;
+      request({
+        url: 'http://localhost:' + clientPort + '/api/apps'
+      }, function(err, res) {
+        res.headers.host.should.eql('localhost:' + serverPort);
+        done();
+      });
+    });
+  });
+
   it('proxies whitelisted headers to and from the API', function(done) {
     request({
       url: 'http://localhost:' + clientPort + '/api/apps',
