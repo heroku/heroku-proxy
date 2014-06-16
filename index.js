@@ -48,6 +48,10 @@ module.exports = function createProxy(options) {
       token = '';
     }
 
+    if (req.get('x-proxy-host')) {
+      options.hostname = req.get('x-proxy-host');
+    }
+
     var proxyReq = require(options.protocol).request({
       auth    : ':' + token,
       headers : headers,

@@ -17,6 +17,17 @@ describe('proxy', function() {
   // NOTE: server.js copies headers from its incoming request back to the
   // original response, which is why we're testing response headers.
 
+  it('supports a custom host via x-proxy-host', function(done) {
+    request({
+      url: 'http://localhost:' + clientPort + '/api/apps',
+      headers: { 'x-proxy-host': '127.0.0.1' }
+    }, function(err, res) {
+      if (err) throw err;
+      res.headers.host.should.eql('127.0.0.1:' + serverPort);
+      done();
+    });
+  });
+
   it('proxies whitelisted headers to and from the API', function(done) {
     request({
       url: 'http://localhost:' + clientPort + '/api/apps',
