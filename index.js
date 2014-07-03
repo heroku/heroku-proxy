@@ -40,7 +40,7 @@ module.exports = function createProxy(options) {
 
   router.all('/' + options.prefix + '/*', function(req, res) {
     var headers = getHeaders(req, options);
-    var token;
+    var hostname, token;
 
     if (req['heroku-bouncer'] && req['heroku-bouncer'].token) {
       token = req['heroku-bouncer'].token;
@@ -48,10 +48,25 @@ module.exports = function createProxy(options) {
       token = '';
     }
 
+    if (req.get('x-proxy-host')) {
+      if (options.proxyHosts.indexOf(req.get('x-proxy-host')) >= 0) {
+        hostname = req.get('x-proxy-host');
+      } else {
+        res.statusCode = 403;
+
+        return res.json({
+          id     : 'forbidden',
+          message: 'Access to this host not allowed'
+        });
+      }
+    } else {
+      hostname = options.hostname;
+    }
+
     var proxyReq = require(options.protocol).request({
       auth    : ':' + token,
       headers : headers,
-      hostname: req.get('x-proxy-host') || options.hostname,
+      hostname: hostname,
       method  : req.method,
       path    : req.originalUrl.slice(4),
       port    : options.port
@@ -124,6 +139,10 @@ function setOptions(options) {
 
   if (!options.hasOwnProperty('headerTransforms')) {
     options.headerTransforms = {};
+  }
+
+  if (!options.hasOwnProperty('proxyHosts')) {
+    options.proxyHosts = [];
   }
 
   if (!options.hasOwnProperty('port')) {

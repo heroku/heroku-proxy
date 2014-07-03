@@ -28,6 +28,17 @@ describe('proxy', function() {
     });
   });
 
+  it('does not support non-whitelisted proxy hosts', function(done) {
+    request({
+      url: 'http://localhost:' + clientPort + '/api/apps',
+      headers: { 'x-proxy-host': 'non-whitelist.example.com' }
+    }, function(err, res) {
+      if (err) throw err;
+      res.statusCode.should.eql(403);
+      done();
+    });
+  });
+
   it('does not override its own host when using x-proxy-host :(', function(done) {
     request({
       url: 'http://localhost:' + clientPort + '/api/apps',

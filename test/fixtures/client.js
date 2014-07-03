@@ -18,6 +18,9 @@ module.exports = function(serverPort) {
 
   app.use(proxy({
     hostname: 'localhost',
+    proxyHosts: [
+      '127.0.0.1'
+    ],
     port: serverPort,
     protocol: 'http',
     whitelistHeaders: ['bar'],
