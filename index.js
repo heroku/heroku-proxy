@@ -113,7 +113,9 @@ function getHeaders(req, options) {
     'if-none-match',
     'range',
     'x-heroku-legacy-ids',
-    'x-request-id'
+    'x-request-id',
+    'heroku-deploy-type',
+    'heroku-deploy-source'
   ].concat(options.whitelistHeaders);
 
   return Object.keys(req.headers).reduce(function(headers, header) {
