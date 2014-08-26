@@ -81,13 +81,14 @@ module.exports = function createProxy(options) {
 
     proxyReq.on('response', function(proxyRes) {
       res.statusCode = proxyRes.statusCode;
-      res.setHeader('cache-control', 'no-cache');
 
       for (var header in proxyRes.headers) {
         if (proxyRes.headers.hasOwnProperty(header)) {
           res.setHeader(header, proxyRes.headers[header]);
         }
       }
+
+      res.setHeader('cache-control', 'no-cache');
 
       proxyRes.pipe(res).on('finish', function() {
         if (options.log) {
