@@ -12,6 +12,7 @@
 var express = require('express');
 var logfmt  = require('logfmt');
 var router  = new express.Router();
+var extend  = require('extend');
 
 /**
  * @method createProxy
@@ -114,12 +115,18 @@ function getHeaders(req, options) {
     'if-none-match',
     'range',
     'x-heroku-legacy-ids',
-    'x-request-id'
+    'request-id'
   ].concat(options.whitelistHeaders);
+
+  // the heroku router provides us with `x-request-id` header, yet
+  // the heroku api expects an unprefixed `request-id`
+  var headerTransforms = extend({
+    'x-request-id': 'request-id'
+    }, options.headerTransforms);
 
   return Object.keys(req.headers).reduce(function(headers, header) {
     var value = req.headers[header];
-    header = options.headerTransforms[header] || header;
+    header = headerTransforms[header] || header;
 
     if (headersWhitelist.indexOf(header) > -1) {
       headers[header] = value;
