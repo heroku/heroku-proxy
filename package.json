@@ -22,6 +22,7 @@
   "homepage": "https://github.com/heroku/heroku-proxy",
   "dependencies": {
     "express": "~3.4.8",
+    "extend": "^1.3.0",
     "logfmt": "^1.1.2"
   },
   "devDependencies": {
