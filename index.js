@@ -115,6 +115,7 @@ function getHeaders(req, options) {
     'if-none-match',
     'range',
     'x-heroku-legacy-ids',
+    'x-request-id',
     'request-id'
   ].concat(options.whitelistHeaders);
 
