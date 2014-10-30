@@ -109,6 +109,7 @@ module.exports = function createProxy(options) {
 function getHeaders(req, options) {
   var headersWhitelist = [
     'accept',
+    'accept-encoding',
     'content-length',
     'content-type',
     'if-none-match',
