@@ -118,6 +118,10 @@ function getHeaders(req, options) {
     'x-request-id'
   ].concat(options.whitelistHeaders);
 
+  var defaultHeaders = {
+    'x-forwarded-for': req.ip
+  };
+
   return Object.keys(req.headers).reduce(function(headers, header) {
     var value = req.headers[header];
     header = options.headerTransforms[header] || header;
@@ -127,7 +131,7 @@ function getHeaders(req, options) {
     }
 
     return headers;
-  }, {});
+  }, defaultHeaders);
 }
 
 function setOptions(options) {

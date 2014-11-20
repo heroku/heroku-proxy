@@ -130,4 +130,14 @@ describe('proxy', function() {
       done();
     });
   });
+
+  it('sets the forwarded for ip header', function(done) {
+    request({
+      url: 'http://localhost:' + clientPort + '/api/apps'
+    }, function(err, res) {
+      if (err) throw err;
+      res.headers['x-forwarded-for'].should.eql('127.0.0.1');
+      done();
+    });
+  });
 });
